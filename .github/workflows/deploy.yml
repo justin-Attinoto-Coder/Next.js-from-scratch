@@ -1,0 +1,19 @@
+name: Deploy to AWS
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::537275484612:role/GitHubAction-DeployRole
+        aws-region: us-east-1
+    - name: Deploy to S3
+      run: aws s3 sync . s3://justin-nextjs-scratch-2025 --delete
